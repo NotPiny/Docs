@@ -6,20 +6,16 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: 'Embers Project Documentation',
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/NotPiny' }],
 			sidebar: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
+					label: 'PineLib',
+					autogenerate: {
+						directory: 'PineLib',
+					},
+					collapsed: true
+				}
 			],
 		}),
 	],

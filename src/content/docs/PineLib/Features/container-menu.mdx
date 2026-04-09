@@ -1,0 +1,174 @@
+---
+title: Container Menus
+description: A guide on how to create container menus in PineLib.
+---
+
+PineLib provides a simple way to create container menus that can be used for various purposes, such as custom inventories, shops, or any other GUI-based interactions.
+
+## Types
+
+There are many different types of container menus available in PineLib, each with its own unique features and use cases:
+
+| Class | Description |
+|---|---|
+| `ChestMenu` | A chest inventory with 1-6 rows |
+| `CrafterMenu` | A crafter-type inventory |
+| `DropperMenu` | A dropper-type inventory |
+| `ContainerMenu` | Generic base class for any Bukkit `Inventory` |
+| `AnvilMenu` | An anvil-based text input menu |
+
+---
+
+## MenuItem
+
+A `MenuItem` wraps a `ItemStack` with an optional click handler.
+
+### Obtaining a MenuItem
+
+```java
+// From a Material or ItemStack, with a click action
+MenuItem.of(Material material, Consumer<InventoryClickEvent> clickAction)
+MenuItem.of(ItemStack item, Consumer<InventoryClickEvent> clickAction)
+
+// From a Material or ItemStack, no click action
+MenuItem.of(Material material)
+MenuItem.of(ItemStack item)
+
+// Direct constructor
+new MenuItem(ItemStack item, Consumer<InventoryClickEvent> clickAction)
+```
+
+### Methods
+
+| Method | Description |
+|---|---|
+| `getItem()` | Returns the underlying `ItemStack` |
+| `setItem(ItemStack)` | Replaces the underlying `ItemStack` |
+| `getClickAction()` | Returns the click action consumer |
+| `setClickAction(Consumer<InventoryClickEvent>)` | Replaces the click action |
+
+## ContainerMenu
+
+The base class for chest, crafter, and dropper menus. Can also be constructed directly with any Bukkit `Inventory`.
+
+```java
+new ContainerMenu(Inventory inventory)
+```
+
+### Methods
+
+#### `add(MenuItem menuItem, boolean strict)`
+Adds a `MenuItem` to the first available empty slot.
+- If `strict` is `true`, throws `IllegalStateException` when no empty slot is found.
+- If `strict` is `false`, the item is silently dropped if the inventory is full.
+
+#### `set(int slot, MenuItem menuItem)`
+Places a `MenuItem` at the given 0-based slot index, replacing any existing item.
+
+#### `get(int slot)`
+Returns the `MenuItem` at the given slot, or `null` if no item is set there.
+
+#### `fill(MenuItem menuItem)`
+Fills all empty slots with the given `MenuItem`.
+
+#### `fill(MenuItem menuItem, boolean override)`
+Fills all slots with the given `MenuItem`. If `override` is `true`, existing items are replaced.
+
+#### `fill(MenuItem menuItem, boolean override, int start)`
+Fills slots from `start` (inclusive) to the end of the inventory.
+
+#### `fill(MenuItem menuItem, boolean override, int start, int end)`
+Fills slots from `start` to `end` (both inclusive).
+
+#### `show(Player player)`
+Opens the menu for the specified player and registers per-player click/close listeners. The player must be online.
+
+#### `onClose(Consumer<InventoryCloseEvent> closeAction)`
+Registers an action that fires whenever any player closes this inventory.
+
+#### `cleanup()`
+Unregisters all event listeners. Should be called when the plugin is disabled or the menu is no longer needed.
+
+---
+
+## ChestMenu
+
+Extends `ContainerMenu`. Creates a chest inventory with a configurable number of rows.
+
+```java
+new ChestMenu(Component title, int rows)
+```
+
+- `rows` must be between **1** and **6** (inclusive), otherwise an `IllegalArgumentException` is thrown.
+
+**Example:**
+```java
+ChestMenu menu = new ChestMenu(Component.text("My Shop"), 3);
+menu.set(13, MenuItem.of(Material.DIAMOND, event -> player.sendMessage("Clicked!")));
+menu.show(player);
+```
+
+---
+
+## CrafterMenu
+
+Extends `ContainerMenu`. Creates a crafter-type inventory.
+
+```java
+new CrafterMenu(Component title)
+```
+
+---
+
+## DropperMenu
+
+Extends `ContainerMenu`. Creates a dropper-type inventory.
+
+```java
+new DropperMenu(Component title)
+```
+
+---
+
+## AnvilMenu
+
+An anvil-based menu that captures the text a player types into the rename field and passes the resulting `ItemStack` to a callback.
+
+:::note[ProtocolLib]
+`AnvilMenu` works best with [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) installed. Without it, rename text capture falls back to Bukkit events, which may be less reliable.
+:::
+
+### Constructor
+
+```java
+new AnvilMenu(Component title, ItemStack startingItem, boolean autoClose, Consumer<ItemStack> clickAction)
+```
+
+| Parameter | Description |
+|---|---|
+| `title` | The title shown at the top of the anvil |
+| `startingItem` | The item placed in the first anvil slot |
+| `autoClose` | If `true`, the inventory closes automatically when the output slot is clicked |
+| `clickAction` | Called with the (optionally renamed) result `ItemStack` when the player clicks the output slot |
+
+### Methods
+
+| Method | Description |
+|---|---|
+| `show(Player player)` | Opens the anvil menu for the specified player |
+| `getMenuTitle()` / `setMenuTitle(Component)` | Get or set the title |
+| `getStartingItem()` / `setStartingItem(ItemStack)` | Get or set the item in the first slot |
+| `getResultItem()` / `setResultItem(ItemStack)` | Get or set the item shown in the output slot |
+| `setClickAction(Consumer<ItemStack>)` | Replace the click callback |
+| `cleanup()` | Unregisters all listeners and ProtocolLib adapters |
+
+**Example:**
+```java
+AnvilMenu menu = new AnvilMenu(
+    Component.text("Enter a name"),
+    new ItemStack(Material.PAPER),
+    true,
+    result -> player.sendMessage("You typed: " + result.getItemMeta().getDisplayName())
+);
+menu.show(player);
+```

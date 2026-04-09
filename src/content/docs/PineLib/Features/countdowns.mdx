@@ -1,0 +1,44 @@
+---
+title: Countdowns
+description: A guide on how to use the countdown feature in PineLib.
+---
+
+Countdowns have two different types: `BossBarCountdown` which is based on the modern Adventure API and `BukkitBossBarCountdown` which is based on the legacy Bukkit API. Both types of countdowns have the same functionality and can be used interchangeably.
+
+## Bukkit
+### Example
+```java
+BossBar bar = Bukkit.createBossBar(title, BarColor.RED, BarStyle.SEGMENTED_20);
+bar.setVisible(true);
+bar.setProgress(1.0); // Set the progress to 100%
+
+for (Player player : Bukkit.getOnlinePlayers()) {
+    bar.addPlayer(player);
+}
+
+new BukkitBossBarCountdown(bar, /* Max time (ticks) */ seconds * 20, /* Interval (ticks) */ 1, /* Assign on join */true);
+```
+
+## Adventure
+### Example
+```java
+Audience target = ...; // Get your target audience
+BossBar bar = BossBar.bossBar(title, 1, BossBar.Color.RED, BossBar.Overlay.NOTCHED_20);
+target.showBossBar(bar);
+
+// Same options as the Bukkit version, but with a different class
+new BossBarCountdown(bar, seconds * 20, 1, true);
+```
+
+## Functionality
+Functionality-wise, both types of countdowns work the same way. They will decrease the progress of the boss bar over time until it reaches 0, at which point the countdown will end. You can also specify whether the countdown should be assigned to players when they join the server, which is useful for long-running countdowns that may start before all players have joined.
+
+### Placeholders
+Countdowns will take the title of the bossbar (whether String or Component), placeholders are formatted `%%{placeholder}%%`, and replace the following placeholders:
+
+* seconds - The number of seconds remaining.
+* minutes - The number of minutes remaining.
+* hours - The number of hours remaining.
+* percentage - The percentage of the countdown remaining.
+* progress - The amount of ticks remaining.
+* raw_progress - percentage but represented as a number between 0 and 1.

@@ -1,0 +1,57 @@
+---
+title: HTTP Server
+description: A guide on how to use the HTTP server feature in PineLib.
+---
+PineLib provides a simple HTTP server that can be used to create custom endpoints for your plugin. The HTTP server runs on the Minecraft port itself, so you don't need to worry about setting up a separate port.
+
+## Testing
+To test the HTTP server, you can use a tool like `curl` or Insomnia to send requests to the server. There is a default endpoint at `/_internal/ping` that you can use to test if the server is running. You should receive a response with the text "pong" if the server is working correctly.
+
+```bash
+curl http://localhost:25565/_internal/ping
+```
+
+## Custom Endpoints
+You can create custom endpoints by extending `SimpleChannelInboundHandler<FullHttpRequest>` and registering your handler with the HTTP server. Here's the code behind the default ping endpoint:
+
+```java
+@ChannelHandler.Sharable
+public class PingHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) {
+        FullHttpResponse res = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1,
+                HttpResponseStatus.OK,
+                Unpooled.copiedBuffer("pong", CharsetUtil.UTF_8)
+        );
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+        res.headers().set(HttpHeaderNames.CONTENT_LENGTH, res.content().readableBytes());
+        ctx.writeAndFlush(res).addListener(ChannelFutureListener.CLOSE);
+    }
+}
+```
+
+### Registration & Removal
+
+To register your custom handler, you can add it to the route list like so:
+
+```java
+PineLib.HTTP_ROUTES.put("/my-endpoint", new MyCustomHandler());
+```
+
+you can also remove existing endpoints by removing them from the route list:
+
+```java
+PineLib.HTTP_ROUTES.remove("/_internal/ping");
+```
+
+## Build Dependencies
+While at runtime, netty is provided by the server, you will need to include it as a dependency in your build system to compile your plugin. You can use the following Gradle dependency:
+
+```groovy
+dependencies {
+    compileOnly 'io.netty:netty-all:4.1.68.Final'
+}
+```
+
+You can also use [paperweight-userdev](https://docs.papermc.io/paper/dev/userdev/) to include the dependency in your development environment.
