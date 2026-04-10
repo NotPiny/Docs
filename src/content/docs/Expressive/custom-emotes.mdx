@@ -1,0 +1,19 @@
+---
+title: Custom Emotes
+description: A guide to creating custom emotes for Expressive.
+---
+
+## Getting the model
+To create a custom emote, you will first need the model for it. When Expressive loads for the first time, it will generate a preincluded model at `plugins/Expressive/expressive.bbmodel`. This file will only generate when it doesn't exist, if something happens to it, simply delete it and restart the server to regenerate it. You can use this file as a base for your custom emotes.
+
+## Animating the model
+To animate the model, you can use [Blockbench](https://blockbench.net/). Simply open the `expressive.bbmodel` file in Blockbench and use the animation editor to create your custom emote animation. Once you are satisfied with your animation, just hit save (ignore the texture save dialog, the texture is not used for Expressive) and your changes will be saved to the model file.
+
+## Loading the updated model
+After saving your changes to the model file, you will need to reload the plugin for the changes to take effect. You can do this by running the command `/expressive reload` in your server console or in-game with the appropriate permissions. (Restarting the server will also work, but is not necessary)
+
+## Using the custom emote
+Once you have reloaded the plugin, your custom emote should be available for use. You can play it by running `/bm play expressive <animation_name>`. Make sure everything is correct, and then you can assign into the Quick Actions menu or use it in any other way you like!
+
+## Adding it to the Quick Actions menu
+To add your custom emote to the Quick Actions menu, simply update the `config.yml` file located at `plugins/Expressive/config.yml`. All you need to do is add the name of your custom emote animation to the `emotes` list (if you want to test this we have a hidden test emote called `hi`, it is a bit cursed however). After adding it to the list, save the file and reload the plugin with `/expressive reload` for the changes to take effect. Your custom emote should now be available in the Quick Actions menu!

@@ -1,0 +1,26 @@
+---
+title: Getting Started
+description: A guide to getting started with Expressive, a simple plugin that lets you add server-side emotes accessible by the Quick Actions hotkey
+sidebar:
+    order: -1
+---
+
+## Installation
+To install Expressive, simply download the latest version from [Modrinth](https://modrinth.com/plugin/expressive) and place the JAR file in your server's `plugins` directory.
+
+### Dependencies
+[![Requires PineLib](https://media.piny.dev/modrinth/PineLib/depends.svg)](https://modrinth.com/plugin/pinelib) [![Requires BetterModel](https://gist.githubusercontent.com/NotPiny/03e13d699b1153eb45b4191a2f4a3bc6/raw/432085b55c5a10a62388d58878b4e0692796c8ff/badge.svg)](https://modrinth.com/plugin/bettermodel)
+
+Simply install the latest versions of [PineLib](https://modrinth.com/plugin/pinelib) and version [2.2.0](https://modrinth.com/plugin/bettermodel/version/5KpBpSYO) of BetterModel (Other versions may not be compatible) to ensure Expressive works correctly.
+
+## Usage
+After installing Expressive and its dependencies, start your server to allow the plugin to generate the necessary files and resource pack. Once the server is running, you can access the Quick Actions menu by pressing the hotkey (default is `G`) and you should see the Expressive emote menu (or a button to open it if you have other plugins/datapacks that use the Quick Actions menu). From there, you can play the included emotes or any custom emotes you have created!
+
+## What could go wrong? / Troubleshooting
+If you have installed Expressive and it is not working correctly, here are some common issues and their solutions:
+- **Issue**: The plugin is not loading or is throwing errors in the console.
+    - **Solution**: Make sure you have installed the required dependencies (PineLib and BetterModel) and that they are the correct versions. Also, check for any error messages in the console that may indicate what the issue is.
+    - **BetterModel**: Expressive is built on BetterModel v2.2.0, newer versions appear to have breaking changes that cause Expressive to not work correctly. If you are using a newer version of BetterModel, try downgrading to v2.2.0 to see if that resolves the issue.
+- **Issue**: Resource pack isn't being served to players / I only see missing models when using Expressive.
+    - **Solution #1**: You may have to force players to accept server resource packs. This can be done by setting `force-resource-pack` to `true` in your server's `server.properties` file.
+    - **Solution #2**: The resource pack server may not have started correctly, try restarting your server and checking the console for any errors related to the resource pack server. If all else fails, manually make players apply `plugins/BetterModel/build.zip`

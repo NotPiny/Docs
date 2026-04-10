@@ -15,6 +15,13 @@ export default defineConfig({
 						directory: 'PineLib',
 					},
 					collapsed: true
+				},
+				{
+					label: 'Expressive',
+					autogenerate: {
+						directory: 'Expressive',
+					},
+					collapsed: true
 				}
 			],
 		}),
